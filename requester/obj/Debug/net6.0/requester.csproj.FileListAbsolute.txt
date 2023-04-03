@@ -1,0 +1,17 @@
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/bin/Debug/net6.0/requester
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/bin/Debug/net6.0/requester.deps.json
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/bin/Debug/net6.0/requester.runtimeconfig.json
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/bin/Debug/net6.0/requester.dll
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/bin/Debug/net6.0/requester.pdb
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/requester.csproj.AssemblyReference.cache
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/requester.GeneratedMSBuildEditorConfig.editorconfig
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/requester.AssemblyInfoInputs.cache
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/requester.AssemblyInfo.cs
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/requester.csproj.CoreCompileInputs.cache
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/requester.dll
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/refint/requester.dll
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/requester.pdb
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/requester.genruntimeconfig.cache
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/ref/requester.dll
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/bin/Debug/net6.0/Newtonsoft.Json.dll
+/Users/changxu/Documents/Coding/chatgpt-retrieval-plugin/requester/obj/Debug/net6.0/requester.csproj.CopyComplete

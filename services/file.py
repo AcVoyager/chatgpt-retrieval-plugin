@@ -29,6 +29,7 @@ def extract_text_from_filepath(filepath: str, mimetype: Optional[str] = None) ->
         mimetype, _ = mimetypes.guess_type(filepath)
 
     if not mimetype:
+        print("debug: "+filepath)
         if filepath.endswith(".md"):
             mimetype = "text/markdown"
         else:
