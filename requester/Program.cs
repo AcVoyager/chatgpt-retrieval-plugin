@@ -2,16 +2,19 @@
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 
-namespace app.requester{
+namespace app{
     public class Program{
 
         const string Url = "http://localhost:3333";
         const string QueryAction = "/query";
         const string UpsertAction = "/upsert";
         const string UpsertFileAction = "/upsert-file";
+
+        const string Author = "Azure China Frontdoor Team";
 
         static async Task Main(string[] args){
 
@@ -78,9 +81,22 @@ namespace app.requester{
             string filePath, 
             string fileName
         )
-        {
+        {   
+            string text = await File.ReadAllTextAsync(filePath);
+            Document document = new Document{
+                id = new Guid().ToString(),
+                text = text,
+                metaData = new DocumentMetaData{
+                    url = filePath,
+                    created_at = DateTime.Now.ToShortTimeString(),
+                    author = Author
+                }
+            };
 
-            throw new NotImplementedException();
+            HttpContent content  = new StringContent(JsonConvert.SerializeObject(document), Encoding.UTF8, "application/json");
+            var res = await client.PostAsync(Url + UpsertAction, content);
+
+            return res;
         }
 
         static async Task<HttpResponseMessage> UpsertFile(

@@ -139,5 +139,5 @@ dmypy.json
 
 # personal
 set-env*.sh
-bin/
-obj/
+*/bin/*
+*/obj/*
