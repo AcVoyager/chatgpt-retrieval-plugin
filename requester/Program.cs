@@ -13,12 +13,13 @@ namespace app{
         const string QueryAction = "/query";
         const string UpsertAction = "/upsert";
         const string UpsertFileAction = "/upsert-file";
-
         const string Author = "Azure China Frontdoor Team";
+
+        static string BearerToken;
 
         static async Task Main(string[] args){
 
-            if(args.Count() <= 1)
+            if(args.Count() < 2)
                 throw new ArgumentException("Please pass the action and file paths as the args.");
             
             string action = args[0];
@@ -37,31 +38,40 @@ namespace app{
                     requester = Query;
                     action = QueryAction;
                     break;
+                case "debug":
+                    Debug(args[1]);
+                    return;
                 default:
                     throw new ArgumentException($"Illegal input for action: {action}");
             }
 
-            var paths = args.Skip(1).ToArray();
-            await SendRequestForAllFilePath(paths, action, requester);
+            BearerToken = Environment.GetEnvironmentVariable("BEARER_TOKEN");
+            if(BearerToken == null){
+                throw new NullReferenceException("Bearer token cannot be null");
+            }
+
+            var path = args[1];
+            await SendRequestForAllFilePath(path, action, requester);
         }
 
         /// Send requests for all files under the filePath, depth = 1
-        static async Task SendRequestForAllFilePath(string[] paths, string action, Func<HttpClient, string, string, Task<HttpResponseMessage>> requester){
+        static async Task SendRequestForAllFilePath(string rootPath, string action, Func<HttpClient, string, string, Task<HttpResponseMessage>> requester){
             using(var client = new HttpClient()){
-                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Environment.GetEnvironmentVariable("BEARER_TOKEN"));
-                foreach(string path in paths){
-                    var folderPath = path;
-                    Console.WriteLine($"---Current Folder: {folderPath}---");
-                    string[] filePaths = Directory.GetFiles(folderPath);
-                    foreach(var filePath in filePaths){
-                        var fileName = Path.GetFileName(filePath);
-                        Console.WriteLine($"---Current File: {fileName}---");
-                        
-                        var res = await requester(client, filePath, fileName);
-
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", BearerToken);
+                Console.WriteLine($"------Iterating all files under {rootPath}------");
+                foreach (string filePath in Directory.EnumerateFiles(rootPath, "*.md", SearchOption.AllDirectories))
+                {
+                    Console.WriteLine($"Current file: {filePath}");
+                    var fileName = Path.GetFileName(filePath);
+                    var res = await requester(client, filePath, fileName);
+                    try{
                         res.EnsureSuccessStatusCode();
-                        await PrettyPrintRes(res);
                     }
+                    catch(HttpRequestException e){
+                        Console.WriteLine(e.StackTrace);
+                        continue;
+                    }
+                    await PrettyPrintRes(res);
                 }
             }
         }
@@ -92,9 +102,6 @@ namespace app{
                 }
             };
 
-            // debug
-            // Console.WriteLine(text);
-
             Documents documents = new Documents{
                 documents = new Document[]{
                     document
@@ -124,6 +131,14 @@ namespace app{
             var responseString = await res.Content.ReadAsStringAsync();
             var prettyResponseString = JsonConvert.SerializeObject(JsonConvert.DeserializeObject(responseString), Formatting.Indented);
             Console.WriteLine(prettyResponseString);
+        }
+
+        static void Debug(string filePath)
+        {
+            foreach (string path in Directory.EnumerateFiles(filePath, "*.md", SearchOption.AllDirectories))
+            {
+                Console.WriteLine(path);
+            }
         }
     }
 }
