@@ -84,7 +84,6 @@ namespace app{
         {   
             string text = await File.ReadAllTextAsync(filePath);
             Document document = new Document{
-                id = new Guid().ToString(),
                 text = text,
                 metaData = new DocumentMetaData{
                     url = filePath,
@@ -93,7 +92,16 @@ namespace app{
                 }
             };
 
-            HttpContent content  = new StringContent(JsonConvert.SerializeObject(document), Encoding.UTF8, "application/json");
+            // debug
+            // Console.WriteLine(text);
+
+            Documents documents = new Documents{
+                documents = new Document[]{
+                    document
+                }
+            };
+
+            HttpContent content  = new StringContent(JsonConvert.SerializeObject(documents), Encoding.UTF8, "application/json");
             var res = await client.PostAsync(Url + UpsertAction, content);
 
             return res;

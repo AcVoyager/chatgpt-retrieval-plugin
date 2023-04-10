@@ -1,6 +1,10 @@
 
 namespace app
-{
+{   
+    public class Documents{
+        public Document[] documents;
+    }
+
     public class Document
     {
         public string? id {get; set;}
