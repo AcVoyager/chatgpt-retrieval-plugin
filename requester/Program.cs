@@ -19,8 +19,8 @@ namespace app{
 
         static async Task Main(string[] args){
 
-            if(args.Count() < 2)
-                throw new ArgumentException("Please pass the action and file paths as the args.");
+            if(args.Count() < 1)
+                throw new ArgumentException("Please pass API action as the arg.");
             
             string action = args[0];
             Func<HttpClient, string, string, Task<HttpResponseMessage>> requester;
@@ -39,7 +39,10 @@ namespace app{
                     action = QueryAction;
                     break;
                 case "debug":
-                    Debug(args[1]);
+                    if(args.Count() <= 1)
+                        Debug(String.Empty);
+                    else
+                        Debug(args[1]);
                     return;
                 default:
                     throw new ArgumentException($"Illegal input for action: {action}");
@@ -50,7 +53,10 @@ namespace app{
                 throw new NullReferenceException("Bearer token cannot be null");
             }
 
-            var path = args[1];
+            var path = Environment.GetEnvironmentVariable("FILE_LOCATION");
+            if(path == null){
+                throw new NullReferenceException("File location cannot be null");
+            }
             await SendRequestForAllFilePath(path, action, requester);
         }
 
@@ -95,9 +101,11 @@ namespace app{
             string text = await File.ReadAllTextAsync(filePath);
             Document document = new Document{
                 text = text,
-                metaData = new DocumentMetaData{
+                metadata = new DocumentMetaData{
+                    source = SourceType.file.ToString(),
+                    source_id = fileName,
                     url = filePath,
-                    created_at = DateTime.Now.ToShortTimeString(),
+                    created_at = DateTimeOffset.Now.ToUnixTimeSeconds().ToString(),
                     author = Author
                 }
             };
@@ -135,10 +143,8 @@ namespace app{
 
         static void Debug(string filePath)
         {
-            foreach (string path in Directory.EnumerateFiles(filePath, "*.md", SearchOption.AllDirectories))
-            {
-                Console.WriteLine(path);
-            }
+            Console.WriteLine(DateTime.Now.ToShortTimeString());
+            Console.WriteLine(DateTimeOffset.Now.ToUnixTimeSeconds().ToString());
         }
     }
 }
